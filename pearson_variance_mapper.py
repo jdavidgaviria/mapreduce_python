@@ -12,11 +12,11 @@ row_count=0
 
 # OPTIMIZATION:
 # initializes a dict to use as accumulator for partial sums of feature
-col_sum_dict={}
-col_mean_dict={}
+feat_sum_dict={}
+feat_mean_dict={}
 for j in range(n_feat):
-	col_sum_dict[j]=float(0)
-	col_mean_dict[j]=float(means_str[j])
+	feat_sum_dict[j]=float(0)
+	feat_mean_dict[j]=float(means_str[j])
 
 # reads a stream of rows from standard input
 for row in sys.stdin:
@@ -26,21 +26,21 @@ for row in sys.stdin:
 	row_count+=1
 	
 	# For every feature...
-	for j in col_sum_dict.keys():		
+	for j in feat_sum_dict.keys():		
 
 		# ...sum it to the accumulator values
-		col_sum_dict[j] += (float(feats[j]) - col_mean_dict[j])**2
+		feat_sum_dict[j] += (float(feats[j]) - feat_mean_dict[j])**2
 
 # OPTIMIZATION:
 # After the mapper is done reading rows.
 # For evey feature...
-for i in col_sum_dict.keys():
+for i in feat_sum_dict.keys():
 	
 	# ...define a key for outout
 	key = str(i)
 	if row_count>0:
 		# ...define a value for output
-		value = str(col_sum_dict[i]) + '_' + str(row_count)
+		value = str(feat_sum_dict[i]) + '_' + str(row_count)
 
 		# emit the key-value pair
 		print '%s:%s' % (key, value)
