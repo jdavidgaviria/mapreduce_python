@@ -1,7 +1,7 @@
 mapreduce_python
 ================
 
-example to calculate the mean and sample variance column-wise if a matrix using mapreduce with python 
+example to calculate the mean and sample variance column-wise of a matrix using mapreduce with python 
 
 ## 1. Deploy
 ### 1.1. Install hadoop
@@ -13,7 +13,8 @@ clone this repo to your computer and consider its local path and ${PATH_TO_REPO}
 
 ## 2. Execution
 
-### 2.1. Calculate Means
+### 2.1. Calculate Means with Hadoop
+
 Execute the following. The "3" passed as argument to the mapper is the number of columns of the input matrix
 ```bash
 bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.2.0.jar -file ${PATH_TO_REPO}/pearson_mean_mapper.py -mapper "./pearson_mean_mapper.py 3" -file ${PATH_TO_REPO}/pearson_mean_reducer.py -reducer "./pearson_mean_reducer.py"  -input ${PATH_TO_REPO}/input -output ${PATH_TO_REPO}/out-mean-01
@@ -25,10 +26,16 @@ To visualize the output <br>
 cat ${PATH_TO_REPO}/out-mean-01/part-*
 ```
 
+Te code can also be tested without hadoop, using pipes (useful to debug) <br>
+
+```bash
+cat input/*.text | ./pearson_mean_mapper.py 3 | sort -k1,1 | ./pearson_mean_reducer.py
+```
 
 
 
-### 2.2. Calculate Sample Variances
+### 2.2. Calculate Sample Variances with Hadoop
+
 Execute the following. The "3" passed as argument to the mapper is the number of columns of the input matrix; the values "173,76.33,33.83" are the corresponding means of each column
 ```bash
 bin/hadoop jar share/hadoop/tools/lib/hadoop-streaming-2.2.0.jar -file ${PATH_TO_REPO}/pearson_variance_mapper.py -mapper "./pearson_variance_mapper.py 3 173,76.33,33.83" -file ${PATH_TO_REPO}/pearson_variance_reducer.py -reducer "./pearson_variance_reducer.py "  -input ${PATH_TO_REPO}/input -output ${PATH_TO_REPO}/out-variance-01
@@ -39,3 +46,10 @@ To visualize the output <br>
 ```bash
 cat ${PATH_TO_REPO}/out-variance-01/part-*
 ```
+
+Te code can also be tested without hadoop, using pipes (useful to debug) <br>
+
+```bash
+cat input/*.text | ./pearson_variance_mapper.py 3 173,76.33,33.83 | sort -k1,1 | ./pearson_variance_reducer.py
+```
+
