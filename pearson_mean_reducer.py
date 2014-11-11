@@ -19,8 +19,8 @@ for line in sys.stdin:
 		feat_num_rows_dict[j]=0
 	
 	# Extract partial sum of values and number of rows and add to accumulators
-	feat_sum_dict[j] = float(value[0])
-	feat_num_rows_dict[j] = int(value[1])
+	feat_sum_dict[j] += float(value[0])
+	feat_num_rows_dict[j] += int(value[1])
 
 # After the reducer is done reading rows.
 # For every feature
